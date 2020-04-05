@@ -4,14 +4,14 @@
 
 ## Introduction
 
-The analytics team at Sparkify is particularly interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data, which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
+The analytics team at Sparkify is interested in understanding what songs users are listening to. Currently, they don't have an easy way to query their data, which resides in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
 
 In this project a Postgres database is created. The tables are designed to optimize queries on song play analysis. An ETL pipeline was written so the the analytics team from Sparkify can easily query the database and compare the results with their expected results.
 
 
 ## DB structure
 
-The database uses the PostgreSQL as the back-end database management system.. The table structure follows the star scheme.
+The database uses the PostgreSQL as the back-end database management system. The table structure follows the star scheme.
 
 ### Fact Table
 
