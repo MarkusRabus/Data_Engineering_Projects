@@ -80,6 +80,15 @@ In the data folder, example JSON files are presented. These files can be ingeste
 2. Run `python etl.py`. This popluates the tables. It will read the corresponding JSON files and insert the data.
 
 3. Query the database using PostgresSQL commands. Run `jupyter test.ipynb` to see examples.
-    
-    
-    
+
+
+
+## Query examples:
+
+```
+SELECT songplays.user_id, SUM(songs.duration) FROM (songplays JOIN songs ON songplays.song_ID=songs.song_ID \
+            JOIN users ON songplays.user_id=users.user_id) GROUP BY songplays.user_id;
+```
+
+This query returns the *user_id* and the sum of the song duration.
+
