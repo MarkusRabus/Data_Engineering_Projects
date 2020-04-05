@@ -1,6 +1,8 @@
 # Collection of Udacity Data Engineering Projects
 
-- Project 1: Data Modelling with Postgres
+Each folder has the data for the respective Udacity Project (including a README file with a project description).
+
+- `project1`: Data Modelling with Postgres
 
 
 
