@@ -18,5 +18,6 @@ I have created tables optimized to answer the following three questions of the d
 3. Give me every user name (first and last) in my music app history who listened to the song 'All Hands Against His Own
 
 ## ETL pipeline
-The ETL pipeline is in implemented in the `Project_1B_Project_Template.ipynb`.
+The ETL pipeline is in implemented in the `Project_1B_Project_Template.ipynb` notebook.
+The CSV files with the data collected by the music streaming up can be found in the `event_data` folder
 
