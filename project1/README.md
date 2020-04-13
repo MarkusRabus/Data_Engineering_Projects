@@ -1,5 +1,5 @@
 
-# Sparkify Database
+# Udacity Sparkify Database
 
 
 ## Introduction
