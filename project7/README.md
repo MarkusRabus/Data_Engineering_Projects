@@ -1,3 +1,3 @@
 # Optimize LinkedIn Profile
 
-** DEADLINE: Jul 10**
+**DEADLINE: Jul 10**
