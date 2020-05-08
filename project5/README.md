@@ -1,3 +1,3 @@
 # Optimize GitHub Profile
 
-**DEADLINE: Jun 12 **
+**DEADLINE: Jun 12**
