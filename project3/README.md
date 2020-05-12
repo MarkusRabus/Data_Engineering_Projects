@@ -67,7 +67,7 @@ The database uses the PostgreSQL as the back-end database management system and 
 8. `dwh.cfg`
     Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. Files should have the format shown below. `key`, `secret` and `db_password` should be added.
 
-{
+```
 [AWS]
 key =
 secret =
@@ -93,7 +93,7 @@ arn = ''
 log_data = 's3://udacity-dend/log_data'
 log_jsonpath = 's3://udacity-dend/log_json_path.json'
 song_data = 's3://udacity-dend/song_data'
-}
+```
 
 ## Prequisites:
 
