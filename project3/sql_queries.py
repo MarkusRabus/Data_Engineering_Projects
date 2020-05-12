@@ -1,12 +1,16 @@
 import configparser
 import os
 
+####
 # CONFIG
+####
 config = configparser.ConfigParser()
 config.read_file(open( os.path.expanduser('~/dwh.cfg') ))
 
-# DROP TABLES
 
+####
+# DROP TABLES
+####
 staging_events_table_drop = "DROP TABLE IF EXISTS staging_events"
 staging_songs_table_drop = "DROP TABLE IF EXISTS staging_songs"
 songplay_table_drop = "DROP TABLE IF EXISTS songplays"
@@ -15,8 +19,10 @@ song_table_drop = "DROP TABLE IF EXISTS songs"
 artist_table_drop = "DROP TABLE IF EXISTS artists"
 time_table_drop = "DROP TABLE IF EXISTS time"
 
-# CREATE TABLES
 
+####
+# CREATE TABLES
+####
 staging_events_table_create = ("""CREATE TABLE IF NOT EXISTS staging_events
         (artist text,
         auth text,
@@ -99,8 +105,10 @@ time_table_create = ("""CREATE TABLE IF NOT EXISTS time
         weekday int NOT NULL);
         """)
 
-# STAGING TABLES
 
+####
+# STAGING TABLES
+####
 staging_events_copy = ("""
     copy staging_events from {}
     credentials 'aws_iam_role={}'
@@ -120,8 +128,10 @@ staging_songs_copy = ("""
     """).format( config.get("S3","SONG_DATA"), 
             config.get("IAM_ROLE", "ARN") )
 
-# FINAL TABLES
 
+####
+# FINAL TABLES
+####
 songplay_table_insert = ("""INSERT INTO songplays 
         (start_time, user_id, level, song_id, artist_id, 
         session_id, location, user_agent) 
@@ -174,16 +184,18 @@ artist_table_insert = ("""INSERT INTO artists
 
 time_table_insert = ("""INSERT INTO time 
         (start_time, hour, day, week, month, year, weekday)
-        SELECT a.start_time,
-        EXTRACT (HOUR FROM a.start_time), EXTRACT (DAY FROM a.start_time),
-        EXTRACT (WEEK FROM a.start_time), EXTRACT (MONTH FROM a.start_time),
-        EXTRACT (YEAR FROM a.start_time), EXTRACT (WEEKDAY FROM a.start_time) FROM
+        SELECT ts.start_time,
+        EXTRACT (HOUR FROM ts.start_time), EXTRACT (DAY FROM ts.start_time),
+        EXTRACT (WEEK FROM ts.start_time), EXTRACT (MONTH FROM ts.start_time),
+        EXTRACT (YEAR FROM ts.start_time), EXTRACT (WEEKDAY FROM ts.start_time) FROM
         (SELECT TIMESTAMP 'epoch' + songplays.start_time/1000 *INTERVAL '1 second' 
-        AS start_time FROM songplays) a;
+        AS start_time FROM songplays) ts;
         """)
 
-# QUERY LISTS
 
+####
+# QUERY LISTS
+####
 create_table_queries = [staging_events_table_create, staging_songs_table_create, songplay_table_create, user_table_create, song_table_create, artist_table_create, time_table_create]
 drop_table_queries = [staging_events_table_drop, staging_songs_table_drop, songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
 copy_table_queries = [staging_events_copy, staging_songs_copy]

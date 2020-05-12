@@ -63,7 +63,9 @@ The database uses the PostgreSQL as the back-end database management system and 
 
 7. `README.md`
     This file. Provides discussion on project. 
-    
+
+8. `dwh.cfg`
+    Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. 
 
 ## Prequisites:
 
