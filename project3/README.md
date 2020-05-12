@@ -65,12 +65,12 @@ The database uses the PostgreSQL as the back-end database management system and 
     This file. Provides discussion on project. 
 
 8. `dwh.cfg`
-    Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. Files should have the format shown below. `key`, `secret` and `db_password` should be added.
+    Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. Files should have the format shown below. `key`, `secret` and `db_password` should be added. Cluster endpoint, `host`, and IAM role `arn` will be added by `status_redshift.py` after cluster becomes available.
 
 ```
 [AWS]
-key =
-secret =
+key = ''
+secret = ''
 
 [DWH]
 dwh_cluster_type = multi-node
