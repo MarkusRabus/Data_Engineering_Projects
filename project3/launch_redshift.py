@@ -1,12 +1,23 @@
+
+'''
+
+Infrastructure as Code: script to create IAM role and create the Redshift cluster on AWS
+
+'''
+
 import os
 import boto3
 import json
 from botocore.exceptions import ClientError
-
 import configparser
 config = configparser.ConfigParser()
-config.read_file(open( os.path.expanduser('~/dwh.cfg') ))
 
+
+####
+# Read configuration file and assign variables
+####
+
+config.read_file(open( os.path.expanduser('~/dwh.cfg') ))
 KEY                    	= config.get('AWS','KEY')
 SECRET                 	= config.get('AWS','SECRET')
 
@@ -23,7 +34,9 @@ DWH_PORT               	= config.get("CLUSTER","DB_PORT")
 
 
 
-
+####
+# Create clients for IAM and Redshift
+####
 
 iam = boto3.client('iam',aws_access_key_id=KEY,
                      aws_secret_access_key=SECRET,
@@ -36,9 +49,12 @@ redshift = boto3.client('redshift',
                        aws_secret_access_key=SECRET
                        )
 
-#1.1 Create the role, 
+
+####
+# Create the role
+####
+
 try:
-    print("1.1 Creating a new IAM Role") 
     dwhRole = iam.create_role(
         Path='/',
         RoleName=DWH_IAM_ROLE_NAME,
@@ -51,18 +67,23 @@ try:
     )    
 except Exception as e:
     print(e)
-    
-    
-print("1.2 Attaching Policy")
+
+
+####
+# Attach policy to role
+####
 
 iam.attach_role_policy(RoleName=DWH_IAM_ROLE_NAME,
                        PolicyArn="arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
                       )['ResponseMetadata']['HTTPStatusCode']
 
-print("1.3 Get the IAM role ARN")
-roleArn = iam.get_role(RoleName=DWH_IAM_ROLE_NAME)['Role']['Arn']
 
-print(roleArn)
+####
+# Create Redshift cluster
+####
+
+roleArn = iam.get_role(RoleName=DWH_IAM_ROLE_NAME)['Role']['Arn'] 	# Get the role ARN 
+																	# that gives access to Redshift
 
 try:
     response = redshift.create_cluster(        
@@ -70,13 +91,11 @@ try:
         ClusterType=DWH_CLUSTER_TYPE,
         NodeType=DWH_NODE_TYPE,
         NumberOfNodes=int(DWH_NUM_NODES),
-
         #Identifiers & Credentials
         DBName=DWH_DB,
         ClusterIdentifier=DWH_CLUSTER_IDENTIFIER,
         MasterUsername=DWH_DB_USER,
         MasterUserPassword=DWH_DB_PASSWORD,
-        
         #Roles (for s3 access)
         IamRoles=[roleArn]  
     )
