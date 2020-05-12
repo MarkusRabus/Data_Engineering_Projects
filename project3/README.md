@@ -65,7 +65,35 @@ The database uses the PostgreSQL as the back-end database management system and 
     This file. Provides discussion on project. 
 
 8. `dwh.cfg`
-    Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. 
+    Configuration file in the home directory. Saves credentials and Redshift cluster setup configuration. Files should have the format shown below. `key`, `secret` and `db_password` should be added.
+
+{
+[AWS]
+key =
+secret =
+
+[DWH]
+dwh_cluster_type = multi-node
+dwh_num_nodes = 4
+dwh_node_type = dc2.large
+dwh_iam_role_name = dwhRole
+dwh_cluster_identifier = dwhCluster
+
+[CLUSTER]
+host = ''
+db_name = project3db
+db_user = project3_user
+db_password = ''
+db_port = 5439
+
+[IAM_ROLE]
+arn = ''
+
+[S3]
+log_data = 's3://udacity-dend/log_data'
+log_jsonpath = 's3://udacity-dend/log_json_path.json'
+song_data = 's3://udacity-dend/song_data'
+}
 
 ## Prequisites:
 
