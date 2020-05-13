@@ -49,7 +49,7 @@ The database uses the PostgreSQL as the back-end database management system and 
 2. `delete_redshift.py`
     Delete Redshift cluster and IAM role.
     
-2. `create_table.py`
+2. `create_tables.py`
     Python script connects to AWS redshift and first drops the tables and then creates new ones. Run this file to reset the tables before each time you run the ETL scripts. 
     
 4. `etl.py` 
@@ -113,7 +113,7 @@ song_data = 's3://udacity-dend/song_data'
 
 2. Run `python check_status.py`. This will check the status of the Redshift cluster on AWS and if available write the redshift cluster endpoint and IAM role ARN hat gives access to Redshift to database in the configuration file..
 
-3. Run `python create_table.py`. This will drop existing tables and create new ones.
+3. Run `python create_tables.py`. This will drop existing tables and create new ones.
 
 4. Run `python etl.py`. This popluates the tables. It will read the corresponding JSON files and insert the data.
 
