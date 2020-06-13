@@ -58,25 +58,14 @@ In the data folder, example JSON files are presented. These files can be ingeste
 
 ## Usage to run pipeline with Jupyter notebook on a AWS Spark cluster:
 
-1. Create AWS Spark Cluster.
+1. Create AWS Spark Cluster with the following hardware: `m5.xlarge`. Release `emr-5.29.0` and the following applications `Spark: Spark 2.4.4 on Hadoop 2.8.5 YARN with Ganglia 3.7.2 and Zeppelin 0.8.2`
 
-2. Run Jupyter notebook.
+2. Run the Jupyter notebook `DataLake_s3.ipynb`. (No credentials neccessary, we are working in the cloud already.)
 
 
 ## Usage run pipeline on local Spark cluster:
 
-1. Create AWS Spark Cluster.
+1. Save your credentials in `dl.cfg`.
 
-2. Save your credentials in `dl.cfg`.
+2. Run `python etl.py`
 
-3. Run `python etl.py`
-
-
-## Query examples:
-
-```
-SELECT songplays.user_id, SUM(songs.duration) FROM (songplays JOIN songs ON songplays.song_ID=songs.song_ID \
-            JOIN users ON songplays.user_id=users.user_id) GROUP BY songplays.user_id;
-```
-
-This query returns the *user_id* and the sum of the song duration.
