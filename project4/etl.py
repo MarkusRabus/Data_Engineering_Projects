@@ -53,20 +53,24 @@ def process_song_data(spark, input_data, output_data):
     df = spark.read.json( song_data, schema=create_songSchema() )
 
     # extract columns to create songs table
-    songs_table = df.select('song_id', 'title', 'artist_id', 'year', 'duration')
+    songs_table = df.select('song_id', 'title', 'artist_id', 'year', 'duration') \
+                    .dropDuplicates()
     
     # write songs table to parquet files partitioned by year and artist
-    songs_table.write.partitionBy("year", "artist_id").mode('overwrite').parquet("songs.parquet")
+    songs_table.write.partitionBy("year", "artist_id").mode('overwrite') \
+                    .parquet( os.path.join(output_data, "songs.parquet") )
 
     # extract columns to create artists table
     artists_table = df.select(col('artist_id'), 
                             col('artist_name').alias('name'), 
                             col('artist_location').alias('location'), 
                             col('artist_latitude').alias('latitude'),
-                            col('artist_longitude').alias('longitude'),)
+                            col('artist_longitude').alias('longitude'),) \
+                            .dropDuplicates()
     
     # write artists table to parquet files partitioned by name
-    artists_table.write.mode('overwrite').parquet("artists.parquet")
+    artists_table.write.mode('overwrite') \
+                        .parquet( os.path.join(output_data, "artists.parquet") )
 
 
 def process_log_data(spark, input_data, output_data):
@@ -101,10 +105,11 @@ def process_log_data(spark, input_data, output_data):
                             col('firstName').alias('first_name'), 
                             col('lastName').alias('last_name'), 
                             col('gender'), 
-                            col('level'))
+                            col('level')).dropDuplicates()
     
     # write users table to parquet files
-    users_table.write.mode('overwrite').parquet("users.parquet")
+    users_table.write.mode('overwrite') \
+                        .parquet( os.path.join(output_data, "users.parquet") )
 
     # create timestamp column from original timestamp column
     get_timestamp = udf( lambda x: x/1000.0 )
@@ -125,7 +130,8 @@ def process_log_data(spark, input_data, output_data):
                         .dropDuplicates()
     
     # write time table to parquet files partitioned by year and month
-    time_table.write.partitionBy("year", "month").mode('overwrite').parquet("time.parquet")
+    time_table.write.partitionBy("year", "month").mode('overwrite') \
+                    .parquet( os.path.join(output_data, "time.parquet") )
 
     # read in song data to use for songplays table
     song_data = os.path.join(input_data, "song_data/A/A/A/*.json") #partial data set
@@ -135,6 +141,7 @@ def process_log_data(spark, input_data, output_data):
     # extract columns from joined song and log datasets to create songplays table
     log_join_song_df = df.join(song_df, (song_df.artist_name == df.artist) \
                                & (song_df.title == df.song))
+    
     songplays_table =  log_join_song_df.select(col('start_time'), 
                         col('userId').alias('user_id'), 
                         col('level'), 
@@ -146,13 +153,14 @@ def process_log_data(spark, input_data, output_data):
                         month(col('start_time')).alias('month'),
                         year(col('start_time')).alias('year'),) \
                         .withColumn('songplay_id', monotonically_increasing_id()) \
-                        .filter("page = 'NextSong'")
+                        .filter("page = 'NextSong'").dropDuplicates()
 
 
 
     # write songplays table to parquet files partitioned by year and month
     songplays_table.write.partitionBy("year", "month") \
-                        .mode('overwrite').parquet("songplays.parquet")
+                        .mode('overwrite') \
+                        .parquet( os.path.join(output_data, "songplays.parquet") )
 
     
 def create_songSchema():
@@ -205,7 +213,7 @@ def create_logSchema():
 def main():
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
-    output_data = ""
+    output_data = "./output/"
     
     process_song_data(spark, input_data, output_data)    
     process_log_data(spark, input_data, output_data)
