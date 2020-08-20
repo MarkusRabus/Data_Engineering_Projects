@@ -22,7 +22,7 @@ default_args = {
 dag = DAG('pipeline_dag',
           default_args=default_args,
           description='Load and transform data in Redshift with Airflow',
-          schedule_interval=None#'0 * * * *'
+          schedule_interval='0 * * * *'
         )
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
@@ -97,8 +97,14 @@ run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
     redshiftConnId='redshift',
-    tableName='songplays',
-    columnName='user_id',
+    dataQualityChecks= [
+        {"checkSQL":
+        "SELECT COUNT(*) from songplays WHERE user_id is NULL" ,
+        "expectedResult":  0} , 
+        {"checkSQL":
+        "SELECT count(*) FROM time WHERE start_time BETWEEN '2019-11-03 00:00:01' AND '2019-11-03 23:59:59';" ,
+        "expectedResult":0},
+        ]
 )
 
 end_operator = DummyOperator(task_id='Stop_execution',  dag=dag)
